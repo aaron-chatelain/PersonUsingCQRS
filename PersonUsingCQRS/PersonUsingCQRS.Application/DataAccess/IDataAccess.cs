@@ -7,7 +7,7 @@ namespace PersonUsingCQRS.DataAccess
     {
         List<PersonModel> GetPeople();
         PersonModel GetPersonById(Guid id);
-        PersonModel AddPerson(Guid id, string givenName, string surName, Gender gender);
-        PersonModel RecordBirth(Guid id, DateTime birthDate, string birthLocation);
+        PersonModel AddPerson(string givenName, string surName, Gender gender);
+        PersonModel RecordBirth(Guid id, DateTime? birthDate, string? birthLocation);
     }
 }

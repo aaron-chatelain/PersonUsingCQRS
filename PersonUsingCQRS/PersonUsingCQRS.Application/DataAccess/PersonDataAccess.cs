@@ -17,14 +17,14 @@ namespace PersonUsingCQRS.DataAccess
             people.Add(new PersonModel { Id = new Guid("e6f7fcd5-003a-400e-b88f-0ec49b5e8e35"), GivenName = "Cher", Gender = Gender.Female });
         }
 
-        public PersonModel AddPerson(Guid id, string givenName, string surName, Gender gender)
+        public PersonModel AddPerson(string givenName, string surName, Gender gender)
         {
-            PersonModel person = new() {Id = id, GivenName = givenName, Surname = surName, Gender = gender};
+            PersonModel person = new() {Id = Guid.NewGuid(), GivenName = givenName, Surname = surName, Gender = gender};
             people.Add(person);
             return person;   
         }
 
-        public PersonModel RecordBirth(Guid id, DateTime birthDate, string birthLocation)
+        public PersonModel RecordBirth(Guid id, DateTime? birthDate, string birthLocation)
         {
             PersonModel person = people.FirstOrDefault(x => x.Id == id);
             if (person != null)
@@ -44,6 +44,5 @@ namespace PersonUsingCQRS.DataAccess
         {
             return people.FirstOrDefault(x => x.Id == id);
         }
-
     }
 }

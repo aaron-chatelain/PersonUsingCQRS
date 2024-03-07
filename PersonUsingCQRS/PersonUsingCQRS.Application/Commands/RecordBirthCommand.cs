@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace PersonUsingCQRS.Application.Commands
 {
-    public record RecordBirthCommand(Guid Id, DateTime BirthDate, string BirthLocation) : IRequest<PersonModel>;
+    public record RecordBirthCommand(Guid Id, DateTime? BirthDate, string BirthLocation) : IRequest<PersonModel>;
 }

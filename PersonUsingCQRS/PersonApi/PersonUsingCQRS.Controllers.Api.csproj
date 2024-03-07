@@ -17,5 +17,5 @@
   <ItemGroup>
     <ProjectReference Include="..\PersonUsingCQRS.Application\PersonUsingCQRS.Application.csproj" />
   </ItemGroup>
-
+    
 </Project>

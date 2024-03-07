@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace PersonUsingCQRS.Application.Commands
 {
     public record AddPersonCommand(
-        Guid Id,
         string GivenName, 
         string? Surname, 
         Gender Gender,

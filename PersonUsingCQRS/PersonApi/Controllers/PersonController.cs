@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonUsingCQRS.Application.Commands;
 using PersonUsingCQRS.Application.Queries;
+using PersonUsingCQRS.Controllers.Api.ViewModels;
 using PersonUsingCQRS.Models;
 using System.ComponentModel;
 
@@ -41,10 +42,9 @@ namespace PersonUsingCQRS.Controllers.Api.Controllers
         // POST api/<PersonController>
         [HttpPost]
         [Route("addperson")]
-        public async Task<IActionResult> AddPerson([FromBody] PersonModel value)
+        public async Task<IActionResult> AddPerson([FromBody] AddPersonViewModel value)
         {
             var model = await mediator.Send(new AddPersonCommand(
-                value.Id,
                 value.GivenName,
                 value.Surname,
                 value.Gender,
@@ -58,9 +58,9 @@ namespace PersonUsingCQRS.Controllers.Api.Controllers
         // POST api/<PersonController>
         [HttpPost]
         [Route("recordbirth")]
-        public async Task<IActionResult> RecordBirth(Guid id, DateTime birthDate, string birthLocation = "")
+        public async Task<IActionResult> RecordBirth([FromBody] RecordBirthViewModel value)
         {
-            var model = await mediator.Send(new RecordBirthCommand(id, birthDate, birthLocation));
+            var model = await mediator.Send(new RecordBirthCommand(value.Id, value.BirthDate, value.BirthLocation));
             return Ok(model);
         }
     }

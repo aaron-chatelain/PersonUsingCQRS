@@ -23,7 +23,7 @@ namespace PersonUsingCQRS.Application.Handlers
         }
         public Task<PersonModel> Handle(AddPersonCommand request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(data.AddPerson(new Guid(), request.GivenName, request.Surname, request.Gender));
+            return Task.FromResult(data.AddPerson(request.GivenName, request.Surname, request.Gender));
         }
     }
 }

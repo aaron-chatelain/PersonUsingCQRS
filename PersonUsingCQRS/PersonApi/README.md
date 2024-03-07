@@ -13,7 +13,6 @@ Run the project either in VSCode or Visual Studio. Queries and Commands can be e
 
 ## Assumptions
 
-* A new guid can be provided for the AddPerson field
 * RecordBirth assumes the person already exists
 
 ## Challenges
