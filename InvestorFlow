@@ -1,41 +1,30 @@
-       private static IEnumerable<AnnouncementModel> GetFilteredAnnouncementForUserUsingFilter2(IEnumerable<AnnouncementViewEntity> announcements,
-       int userID, List<int> docCatID, int noOfAnnouncement, List<string> postedDate, bool thumbnailVisibility)
-       {
-           IEnumerable<AnnouncementModel> FilteredAnnouncement = null;
-           LingMetaData metaData = new LingMetaData();
+        private static IEnumerable<AnnouncementModel> GetFilteredAnnouncementForUserUsingFilter(IEnumerable<AnnouncementViewEntity> announcements,
+        int userId, List<int> filterByDocumentCategoryIds, List<string> filterByPostedDates, bool thumbnailVisibility)
+        {
+            IEnumerable<AnnouncementModel> FilteredAnnouncement = null;
 
-           FilteredAnnouncement = (from ann in announcements
-                                   where (docCatID.Contains(ann.DocumentCategoryID ?? 0) && (ann.Posted.Date >= DateTime.Parse(postedDate[0]) && ann.Posted.Date <= DateTime.Parse(postedDate[1])))
-                                   select new AnnouncementModel
-                                   {
-                                       AnnouncementTypeID = ann.AnnouncementTypeID,
-                                       DocumentCategoryID = ann.DocumentCategoryID,
-                                       Label = ann.Posted.ToString("MM.dd.yyyy") + " - " + ann.Title,
-                                       EndTimeZoneInfo = ann.EndTimeZoneInfo,
-                                       StartTimeZoneInfo = ann.StartTimeZoneInfo,
-                                       AnnouncementAccessed = ann.AnnouncementAccessed,
-                                       CoverImageURL = AnnouncementManager.GenerateCoverImageURLFromCoverImageID(ann.CoverImageID),
-                                       AnnouncementIcon = AnnouncementManager.IconForAlert(ann.AnnouncementTypeID, ann.Filename),
-                                       AnnouncementPostedDate = ann.Posted.ToString("MMM yyyy"),
-                                       ThumbnailVisibility = thumbnailVisibility ? "inline-block" : "none",
-                                       Highlight = AnnouncementManager.HighLightAnnouncement(ann.Id) //update this to column highlight
-                                   }).Distinct();
+            FilteredAnnouncement = (
+                from announcement in announcements
+                where filterByDocumentCategoryIds.Contains(announcement.DocumentCategoryID ?? 0)
+                where announcement.Posted.Date >= DateTime.Parse(filterByPostedDates[0]) && announcement.Posted.Date <= DateTime.Parse(filterByPostedDates[1])
+                select AnnouncementModel.MapFrom(announcement, thumbnailVisibility)
+                ).Distinct();
 
-           FilteredAnnouncement = FilteredAnnouncement.Select(annModel =>
-           {
-               annModel.AnnouncementDetails = GetAnnouncementDetails(annModel.AnnouncementId).ToList();
+            FilteredAnnouncement = FilteredAnnouncement.Select(annModel =>
+            {
+                annModel.AnnouncementDetails = GetAnnouncementDetails(annModel.AnnouncementId).ToList();
 
-               int vehicleIDInt = annModel.vehicleID ?? 0;
+                int vehicleIDInt = annModel.vehicleID ?? 0;
 
-               if (vehicleIDInt != 0)
-               {
-                   IFS.Platform.Managers.VehicleManager vehicleManager = new IFS.Platform.Managers.VehicleManager();
-                   VehicleEntity vehicleEntity = vehicleManager.GetVehicle(vehicleIDInt);
-                   annModel.VehicleGuid = vehicleEntity.VehicleGuid;
-                   annModel.VehicleDisclaimerAcceptRequired = vehicleManager.IsDisclaimerAcceptRequiredForVehicle(userID, vehicleIDInt);
-               }
-               return annModel;
-           });
+                if (vehicleIDInt != 0)
+                {
+                    IFS.Platform.Managers.VehicleManager vehicleManager = new IFS.Platform.Managers.VehicleManager();
+                    VehicleEntity vehicleEntity = vehicleManager.GetVehicle(vehicleIDInt);
+                    annModel.VehicleGuid = vehicleEntity.VehicleGuid;
+                    annModel.VehicleDisclaimerAcceptRequired = vehicleManager.IsDisclaimerAcceptRequiredForVehicle(userId, vehicleIDInt);
+                }
+                return annModel;
+            });
 
-           return FilteredAnnouncement;
-       }
+            return FilteredAnnouncement;
+        }
