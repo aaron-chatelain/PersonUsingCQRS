@@ -25,6 +25,5 @@ namespace PersonUsingCQRS.Models
         public string? BirthLocation { get; set; }
         public DateTime? DeathDate { get; set; }
         public string? DeathLocation { get; set; }
-
     }
 }
